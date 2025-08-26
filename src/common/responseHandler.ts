@@ -6,6 +6,11 @@ export const successResponce = (code:HttpStatus,response:Response,data:any, alre
     let responseData = alreadyWrappedWithData ? data : {data};
     response.status(code).json(responseData);
 }
-export const errorResponce = (code:HttpStatus,response:Response,error:IError)=>{
+export const errorResponce = (code:HttpStatus,response:Response,error:IError )=>{
+    const errorData = {
+        code,
+        key:error.key,
+        message:error.message
+    }
     response.status(code).json({error});
 }
