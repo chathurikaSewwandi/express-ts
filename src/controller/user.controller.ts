@@ -23,23 +23,23 @@ export class UserController{
         try {
             const user = req.body;
             const newUser = await this.UserService.createUser(user);
-            successResponse(HttpStatus.CREATED,res,newUser);
+            return  successResponse(HttpStatus.CREATED,res,newUser);
         } catch(error:any) {
-            errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, res, error.message);
-        }
-       }
-
-       getUserByEmail = async (req:Request, res:Response) => {
+            return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, res, error.message);
+            }
+           }
+    
+           getUserByEmail = async (req:Request, res:Response) => {
         try {
             const {email} = req.params;
             const user = await this.UserService.getUserByEmail(email);
-            successResponse(HttpStatus.OK,res,user);
+           return  successResponse(HttpStatus.OK,res,user);
         }catch(error:any) {
             console.log(JSON.stringify(error));
             if(error.message === ERRORS.GET_FAILED.key){
-                errorResponse(HttpStatus.NOT_FOUND,res,ERRORS.GET_FAILED);
+             return errorResponse(HttpStatus.NOT_FOUND,res,ERRORS.USER_NOT_FOUND);
             }
-            errorResponse(HttpStatus.INTERNAL_SERVER_ERROR,res, ERRORS.BAD_REQUEST);
+            return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR,res, ERRORS.BAD_REQUEST);
         }
     }
 }
