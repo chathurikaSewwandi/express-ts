@@ -1,3 +1,5 @@
+import { CreateUserDto, createUserDtoSchema } from './../dto/user/createUser.dto';
+import { ValidateRequestBody } from '../middleware/validation.middleware';
 import { UserController } from './../controller/user.controller';
 import { Router } from "express";
 
@@ -22,7 +24,7 @@ export class UserRoute{
     
     }
  private setupRoutes(){
-    this.router.post("/", this.userController.createUser);
+    this.router.post("/", ValidateRequestBody(createUserDtoSchema), this.userController.createUser);
     this.router.get("/:email", this.userController.getUserByEmail);
  }
 

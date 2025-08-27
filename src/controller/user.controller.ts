@@ -3,6 +3,7 @@ import { errorResponse, successResponse } from '../common/responseHandler';
 import { HttpStatus } from '../common/constants/httpStatus.enum';
 import { ERRORS } from '../common/constants/errors.constants';
 import { Request, Response } from 'express';
+import { CreateUserDto } from '../dto/user/createUser.dto';
 
 export class UserController{
      private static instance:UserController;
@@ -21,9 +22,16 @@ export class UserController{
        }
        createUser = async (req:Request, res:Response) => {
         try {
-            const user = req.body;
-            const newUser = await this.UserService.createUser(user);
+            const user = req.body as CreateUserDto;
+            const now = new Date();
+            const userWithTimestamps = {
+                ...user,
+                createdAt: now,
+                updatedAt: now
+            };
+            const newUser = await this.UserService.createUser(userWithTimestamps);
             return  successResponse(HttpStatus.CREATED,res,newUser);
+            
         } catch(error:any) {
             return errorResponse(HttpStatus.INTERNAL_SERVER_ERROR, res, error.message);
             }
@@ -34,6 +42,7 @@ export class UserController{
             const {email} = req.params;
             const user = await this.UserService.getUserByEmail(email);
            return  successResponse(HttpStatus.OK,res,user);
+
         }catch(error:any) {
             console.log(JSON.stringify(error));
             if(error.message === ERRORS.GET_FAILED.key){
